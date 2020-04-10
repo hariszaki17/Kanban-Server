@@ -75,7 +75,6 @@ class TaskController {
                 errors: [{ message: 'Invalid request' }]
             })
         }
-        console.log('wah')
         Task.update(
             { 
                 [type]: args 

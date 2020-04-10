@@ -76,7 +76,6 @@ class UserController {
 
     static googleSign(req, res, next) {
         const client = new OAuth2Client(process.env.CLIENT_ID);
-        console.log(client)
         let email = ''
         client.verifyIdToken({
             idToken: req.body.token,
@@ -93,14 +92,14 @@ class UserController {
         .then(data => {
             if(data) {
                 let payload = {
-                    email: data.email,
-                    id: data.id
+                    id: data.id,
+                    email: data.email
                 }
                 let token = generateToken(payload)
                 res.status(200).json({
                     id: data.id,
                     email: data.email,
-                    accessToken: token
+                    token
                 })
             } else {
                 return User.create({
@@ -111,7 +110,6 @@ class UserController {
         })
         .then((result) => {
             if (result) {
-                console.log(email)
                 const user = {
                     id: result.id,
                     email: result.email
@@ -120,7 +118,7 @@ class UserController {
                 res.status(201).json({
                     id: user.id,
                     email: user.email,
-                    accessToken: token
+                    token
                 })
             }
         })

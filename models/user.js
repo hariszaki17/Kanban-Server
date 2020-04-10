@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     get password() {
       return this.password
     }
+    get organization() {
+      return this.organization
+    }
   }
 
   User.init({
@@ -27,12 +30,19 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true
       }
+    },
+    organization: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: true
+      }
     }
   }, {
     sequelize,
     hooks: {
       beforeCreate: (User, options) => {
         User.password =  encrypt(User.password)
+        User.organization = 'Hacktiv8'
       }
     },
     modelName: 'User'
