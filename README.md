@@ -2,7 +2,7 @@
 
 **Membuat task (Create task)**
 ----
-  Returns json data about a single todo task that recently added.
+  Returns json data about a single task task that recently added.
 
 * **URL**
 
@@ -149,9 +149,9 @@
 
  -----------------------------------------------------------------------------------
 
-  **Menghapus data todo (Delete todo)**
+  **Menghapus data task (Delete task)**
 ----
-  Returns json data about a single todo task that recently deleted.
+  Returns json data about a single task task that recently deleted.
 
 * **URL**
 
