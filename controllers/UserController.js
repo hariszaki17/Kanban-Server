@@ -1,6 +1,7 @@
 const { User } = require('../models')
 const { generateToken } =  require('../helpers/jwt')
 const { decrypt } = require('../helpers/bcrypt')
+const { OAuth2Client } = require('google-auth-library');
 
 class UserController {
     static read (req, res, next) {
@@ -72,6 +73,61 @@ class UserController {
             return next(err)
         });
     }
+
+    static googleSign(req, res, next) {
+        const client = new OAuth2Client(process.env.CLIENT_ID);
+        console.log(client)
+        let email = ''
+        client.verifyIdToken({
+            idToken: req.body.token,
+            audience: process.env.CLIENT_ID
+        })
+        .then((ticket) => {
+            email = ticket.getPayload().email
+            return User.findOne({
+                where: {
+                    email
+                }
+            })
+        })
+        .then(data => {
+            if(data) {
+                let payload = {
+                    email: data.email,
+                    id: data.id
+                }
+                let token = generateToken(payload)
+                res.status(200).json({
+                    id: data.id,
+                    email: data.email,
+                    accessToken: token
+                })
+            } else {
+                return User.create({
+                 email,
+                 password: 'googlePass123'   
+                })
+            }
+        })
+        .then((result) => {
+            if (result) {
+                console.log(email)
+                const user = {
+                    id: result.id,
+                    email: result.email
+                }
+                const token = generateToken(user)
+                res.status(201).json({
+                    id: user.id,
+                    email: user.email,
+                    accessToken: token
+                })
+            }
+        })
+        .catch((err) => {
+            next(err)
+        });
+      }
 }
 
 module.exports = UserController

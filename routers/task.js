@@ -7,6 +7,6 @@ router.use(authentication)
 router.get('/', TaskController.read)
 router.post('/', TaskController.create)
 router.delete('/:id', authorization, TaskController.delete)
-router.put('/:id', authorization, TaskController.edit)
+router.patch('/:id', authorization, TaskController.edit)
 
 module.exports = router

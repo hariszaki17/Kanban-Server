@@ -3,28 +3,18 @@ const { Op } = require('sequelize')
 
 class TaskController {
     static read (req, res, next) {
-        if (req.query.category) {
-            Task.findAll({
-                where: {
-                    [Op.and]: [
-                        { userId: req.currentuserId },
-                        { category: req.query.category}
-                    ]
-                }
+        Task.findAll({
+            where: {
+                userId: req.currentuserId
+            }
+        })
+        .then((result) => {
+            return res.status(200).json({
+                tasks: result
             })
-            .then((result) => {
-                return res.status(200).json({
-                    tasks: result
-                })
-            }).catch((err) => {
-                return next(err)
-            });
-        } else {
-            return next({
-                name: 'BadRequest',
-                errors: [{ message: 'Invalid request' }]
-            })
-        }
+        }).catch((err) => {
+            return next(err)
+        });
     }
 
     static create (req, res, next) {
